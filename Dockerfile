@@ -10,10 +10,7 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-dev --no-editable
 ENV PATH="/app/.venv/bin:$PATH" MINING_DATA_DIR=/app/data MINING_MODE=demo MINING_AS_OF=2021-09-08
 COPY data/manifest.json ./data/manifest.json
-RUN --mount=type=cache,target=/tmp/mining-data \
-    cp data/manifest.json /tmp/mining-data/manifest.json && \
-    MINING_DATA_DIR=/tmp/mining-data MINING_HTTP_TIMEOUT=60 mining-brief prepare && \
-    cp -r /tmp/mining-data/raw data/
+COPY data/replay.json ./data/replay.json
 RUN useradd --create-home --uid 10001 brief && mkdir /app/outputs && \
     chmod -R a+rX /app/data && chown brief:brief /app/outputs
 USER brief

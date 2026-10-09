@@ -39,6 +39,15 @@ def validate_url(url: str, allowed_hosts: tuple[str, ...]) -> str:
 
 
 async def download(url: str, settings: Settings) -> bytes:
+    # A slow response body must not outlive the MCP tool's 60-second deadline.
+    try:
+        async with asyncio.timeout(min(45, settings.request_timeout * 3 + 2)):
+            return await _download_with_retries(url, settings)
+    except TimeoutError as exc:
+        raise SourceError("source_timeout", "来源下载超过总时限，未使用未完整下载的内容") from exc
+
+
+async def _download_with_retries(url: str, settings: Settings) -> bytes:
     """Retry only transient source failures, at most three attempts."""
     for attempt in range(3):
         try:

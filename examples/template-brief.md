@@ -1,12 +1,12 @@
 # Pilbara 锂矿日报
 
-> 历史数据 Demo（不是今日实时行情） · 分析截止：2021-09-08 · 生成：2026-10-09T12:09:41.019297+00:00
+> 历史数据 Demo（不是今日实时行情） · 分析截止：2021-09-08 · 生成：2026-10-09T12:39:40.459218+00:00
 > 实体：Pilbara Minerals / PLS 的 Pilgangoora 项目 · 状态：complete · 生成方式：template
 
 ## 新闻摘要
 
-- **Pilgangoora JORC 2012 Mineral Resource Update**（2021-09-06）：原文要点摘录：Discovery of new pegmatite domains, together with integration of the Ngungaju Resource, leads to a substantial increase in the JORC 2012 Mineral Resource for… [1]
-- **June 2021 Full-Year Financial Results**（2021-08-26）：原文要点摘录：2021 Financial Year (FY2021) financial results reflect strong operational performance and improving market conditions in the second half of the year, resulting in a… [2]
+- **Pilgangoora JORC 2012 Mineral Resource Update**（2021-09-06）：原文要点摘录：Discovery of new pegmatite domains, together with integration of the Ngungaju Resource, leads to a substantial increase in the JORC 2012 Mineral Resource for [1]
+- **June 2021 Full-Year Financial Results**（2021-08-26）：原文要点摘录：2021 Financial Year (FY2021) financial results reflect strong operational performance and improving market conditions in the second half of the year, resulting in a [2]
 
 ## 资源量数据
 

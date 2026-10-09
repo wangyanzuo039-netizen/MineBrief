@@ -47,6 +47,7 @@ async def prepare(settings: Settings, *, include_live: bool = False) -> list[dic
     )
     if include_live:
         ids.add(manifest["live_report_id"])
+        ids.update(manifest.get("live_news_ids", []))
 
     async def one(entry: dict[str, Any]) -> dict[str, str]:
         target = original_path(settings, entry)

@@ -39,3 +39,11 @@ async def test_source_policy_rejection_is_not_retried(monkeypatch):
     with pytest.raises(SourceError):
         await download("https://localhost/x", Settings())
     assert supplied.await_count == 1
+
+
+async def test_total_download_timeout_becomes_structured_source_failure(monkeypatch):
+    supplied = AsyncMock(side_effect=TimeoutError("total deadline"))
+    monkeypatch.setattr("mining_brief.network._download_with_retries", supplied)
+    with pytest.raises(SourceError) as caught:
+        await download("https://www.lme.com/current.xlsx", Settings())
+    assert caught.value.code == "source_timeout"

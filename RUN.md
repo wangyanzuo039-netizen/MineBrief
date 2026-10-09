@@ -2,7 +2,7 @@
 
 ## 推荐：离线交付包
 
-从交付人取得 `mining-brief-offline.zip`，完整解压。该包包含源码、运行镜像、依赖及已校验的演示资料；演示时无需联网、模型密钥或付费数据账号。GitHub 只发布源码、配置及抽取证据，`dist/` 和完整原文缓存不进入仓库；仅克隆源码时请使用下文的联网构建步骤。
+从 [GitHub Release](https://github.com/wangyanzuo039-netizen/MineBrief/releases/tag/v0.1.0-demo) 下载 `mining-brief-offline.zip` 及其 `.sha256`，完整解压。该包包含源码、运行镜像、依赖及核验提取缓存；演示时无需联网、模型密钥或付费数据账号。Git 仓库提供源码、配置和核验提取缓存；Release 提供离线运行包。完整第三方原文不进入仓库或公开镜像。
 
 前提：Docker Desktop 已安装、启动，使用 Linux containers；电脑为 x86-64 Windows / Linux。五分钟计时从本地已有压缩包开始，包含解压、校验、首次导入镜像和生成日报；不包含安装 Docker 或传输交付包。
 
@@ -55,7 +55,7 @@ docker compose -f compose.offline.yaml run --rm agent extract-ni
 
 ## 源码开发与联网构建
 
-源码包 `dist/mining-brief-demo.zip` 体积较小，不含镜像或完整原文；首次构建需要网络，耗时不作为离线五分钟成绩。
+源码包体积较小，含核验提取缓存，不含镜像或完整原文；首次构建需要网络下载基础镜像和依赖，不再下载第三方 PDF。离线 Release 是五分钟演示的推荐入口。
 
 ```powershell
 docker compose run --build --rm agent --strict
@@ -65,11 +65,10 @@ docker compose run --build --rm agent --strict
 
 ```powershell
 uv sync --frozen --python 3.11 --no-editable
-uv run --frozen --no-editable mining-brief prepare
 uv run --frozen --no-editable mining-brief --strict
 ```
 
-中文路径使用 `--no-editable`；修改源码后执行 `uv sync --frozen --no-editable --reinstall-package mining-brief`。全局参数放在子命令前，例如 `mining-brief --output outputs/checks check`。原文变化导致哈希不符时，人工核对并更新 manifest，不能跳过校验。
+中文路径使用 `--no-editable`；修改源码后执行 `uv sync --frozen --no-editable --reinstall-package mining-brief`。全局参数放在子命令前，例如 `mining-brief --output outputs/checks check`。原文变化导致哈希不符时，人工核对并更新 manifest 和提取缓存，不能跳过校验。
 
 ## 可选：模型与当前日期模式
 
@@ -85,7 +84,7 @@ docker compose run --rm agent --generation llm --strict
 uv run --frozen --no-editable mining-brief --mode live --strict
 ```
 
-live 采用上海时区当天日期，新闻来自 Google News RSS。当前价格需配置 `MINING_PRICE_FILE`（LME LH 原始工作簿绝对路径）、`MINING_PRICE_CONTRACT`（YYYY-MM）和 `MINING_PRICE_SOURCE_URL`。格式要求 LH 工作表、USD/mt、M01…M15；其他格式需新增 adapter。已登记的项目报告为 2025 年披露，需维护 manifest 更新版本。**完整当前日期行情尚未验收**；缺失时明确 partial，不以历史报价补成“今日”。
+live 采用上海时区当天日期，优先使用登记的近期发行人公告，无匹配公告时查询 Google News RSS。当前价格需配置 `MINING_PRICE_URL`（可访问的官方 LME LH 工作簿 URL）或 `MINING_PRICE_FILE`（LME LH 原始工作簿绝对路径）、`MINING_PRICE_CONTRACT`（YYYY-MM）和 `MINING_PRICE_SOURCE_URL`。格式要求 LH 工作表、USD/mt、M01…M15；其他格式需新增 adapter。已登记的项目报告为 2025 年披露，需维护 manifest 更新版本。**完整当前日期行情尚未验收**；缺失时明确 partial，不以历史报价补成“今日”。
 
 ## 质量检查与打包
 
@@ -93,14 +92,14 @@ live 采用上海时区当天日期，新闻来自 Google News RSS。当前价�
 uv run --frozen --no-editable ruff check src tests scripts
 uv run --frozen --no-editable ruff format --check src tests scripts
 uv run --frozen --no-editable mypy src
-uv run --frozen --no-editable pytest
+uv run --frozen --no-editable pytest -m "not live"
 uv run --frozen --no-editable python scripts/verify_tool_contract.py
 uv run --frozen --no-editable python scripts/verify_image_revision.py
 uv run --frozen --no-editable python scripts/package_delivery.py
 uv run --frozen --no-editable python scripts/package_offline.py
 ```
 
-先准备原文，确保真实 PDF 和集成测试没有 skip。源码包与离线包均有 SHA-256 文件；按白名单打包，不含密钥、虚拟环境或个人输出。离线包的镜像包含演示原文缓存，使用范围见 DATA_SOURCES.md。
+默认检查在无原文缓存、无来源网络的环境运行，包含三服务 stdio 集成与自编 PDF 测试。原文复验单独执行 `uv run mining-brief prepare` 和 `uv run pytest -m live`；下载失败不能标成已验证。CI 的原文复验通过 Actions 手动勾选 fetch_originals 触发，默认 CI 不掩盖外部网络可用性。源码包与离线包均有 SHA-256 文件；按白名单打包，不含密钥、虚拟环境或个人输出。离线包的镜像包含演示原文缓存，使用范围见 DATA_SOURCES.md。
 
 维护者复验空缓存首次启动：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify_offline_cold.ps1`。该脚本使用固定版本 Docker-in-Docker 辅助镜像（须提前获取），创建隔离、断网且没有宿主机 Docker socket 的临时测试引擎，结束后只移除本次辅助容器及其临时卷，不清理用户镜像。这不是 HR 启动步骤。
 

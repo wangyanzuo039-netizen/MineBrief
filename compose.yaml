@@ -13,4 +13,7 @@ services:
       MINING_LLM_API_KEY: ${MINING_LLM_API_KEY:-}
       MINING_LLM_BASE_URL: ${MINING_LLM_BASE_URL:-https://api.deepseek.com}
       MINING_LLM_MODEL: ${MINING_LLM_MODEL:-deepseek-flash}
+      MINING_PRICE_URL: ${MINING_PRICE_URL:-}
+      MINING_PRICE_CONTRACT: ${MINING_PRICE_CONTRACT:-}
+      MINING_PRICE_SOURCE_URL: ${MINING_PRICE_SOURCE_URL:-}
     command: ["--mode", "demo", "--query", "给我生成一份关于 Pilbara 锂矿的今日简报"]

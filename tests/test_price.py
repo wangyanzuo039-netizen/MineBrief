@@ -82,3 +82,26 @@ async def test_incomplete_window_or_zero_base_is_partial(monkeypatch, days, valu
     response = await provider.get_trend("lithium", days)
     assert response["status"] == "partial"
     assert response["warnings"]
+
+
+async def test_current_workbook_url_respects_cutoff_and_fixed_contract(monkeypatch):
+    from unittest.mock import AsyncMock
+
+    monkeypatch.delenv("MINING_PRICE_FILE", raising=False)
+    monkeypatch.setenv("MINING_PRICE_URL", "https://www.lme.com/current.xlsx")
+    monkeypatch.setenv("MINING_PRICE_CONTRACT", "2026-10")
+    content = workbook(
+        [
+            [datetime(2026, 10, 7), *([100] * 15)],
+            [datetime(2026, 10, 8), *([110] * 15)],
+            [datetime(2026, 10, 10), *([999] * 15)],
+        ]
+    )
+    monkeypatch.setattr("mining_brief.providers.price.download", AsyncMock(return_value=content))
+    provider = PriceProvider(Settings(mode="live", as_of="2026-10-09"))
+    quote = await provider.get_price("lithium", "2026-10-09")
+    trend = await provider.get_trend("lithium", 5)
+    assert quote["data"]["observation_date"] == "2026-10-08"
+    assert quote["data"]["is_stale"] is True
+    assert trend["data"]["percentage_change"] == "10.0000"
+    assert len(trend["data"]["points"]) == 2

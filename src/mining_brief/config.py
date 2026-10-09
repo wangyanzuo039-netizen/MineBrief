@@ -25,6 +25,7 @@ class Settings(BaseModel):
         "announcements.asx.com.au",
         "noramlithiumcorp.com",
         "www.pls.com",
+        "pls.com",
         "pls.au",
         "www.pilbaraminerals.com.au",
         "news.google.com",

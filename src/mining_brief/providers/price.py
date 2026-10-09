@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import os
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
@@ -10,8 +11,8 @@ import openpyxl
 from pydantic import HttpUrl
 
 from mining_brief.config import Settings
-from mining_brief.data import verify
-from mining_brief.network import SourceError, original_path
+from mining_brief.network import SourceError, download
+from mining_brief.replay import load_replay
 from mining_brief.schemas import PricePoint, Source, result
 
 
@@ -76,33 +77,31 @@ class PriceProvider:
     async def points(self, commodity: str) -> list[PricePoint]:
         if commodity.lower() not in {"lithium_hydroxide", "lithium", "锂", "氢氧化锂"}:
             raise SourceError("unsupported_commodity", "支持 lithium_hydroxide")
-        entry = self.settings.manifest()["price"]
-        local = original_path(self.settings, entry)
         if self.settings.mode == "demo":
-            if not local.exists():
-                raise SourceError("missing_data", "请先运行 mining-brief prepare 下载原始行情")
-            content = local.read_bytes()
-            verify(content, entry)
-            contract = entry["contract_month"]
-        else:
-            import os
-
-            configured = os.getenv("MINING_PRICE_FILE")
-            if not configured:
-                raise SourceError(
-                    "price_not_configured",
-                    "live 需要 MINING_PRICE_FILE 与 MINING_PRICE_CONTRACT；演示历史文件不会冒充今日行情",
-                )
-            contract = os.getenv("MINING_PRICE_CONTRACT", "")
-            content = Path(configured).read_bytes()
-        import os
-
+            replay = load_replay(self.settings)
+            if replay["price_original_sha256"] != self.settings.manifest()["price"]["sha256"]:
+                raise SourceError("replay_source_mismatch", "行情提取缓存与登记原文版本不符")
+            return [PricePoint.model_validate(point) for point in replay["prices"]]
+        configured = os.getenv("MINING_PRICE_FILE")
+        source_url = os.getenv("MINING_PRICE_URL")
+        contract = os.getenv("MINING_PRICE_CONTRACT", "")
+        if not configured and not source_url:
+            raise SourceError(
+                "price_not_configured",
+                "live 需要 MINING_PRICE_FILE 或 MINING_PRICE_URL，及 MINING_PRICE_CONTRACT；不会用历史价格填充今日",
+            )
+        if not contract:
+            raise SourceError("price_not_configured", "缺少固定交割月份 MINING_PRICE_CONTRACT")
+        content = (
+            Path(configured).read_bytes()
+            if configured
+            else await download(str(source_url), self.settings)
+        )
         url = (
-            entry["url"]
-            if self.settings.mode == "demo"
-            else os.getenv(
-                "MINING_PRICE_SOURCE_URL",
-                "https://www.lme.com/market-data/reports-and-data/historical-data-for-cash-settled-futures",
+            source_url
+            or os.environ.get("MINING_PRICE_SOURCE_URL")
+            or (
+                "https://www.lme.com/market-data/reports-and-data/historical-data-for-cash-settled-futures"
             )
         )
         return parse_workbook(content, contract, url)

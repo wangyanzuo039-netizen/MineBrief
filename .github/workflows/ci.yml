@@ -2,6 +2,12 @@ name: quality
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      fetch_originals:
+        description: "Download originals and run network evidence checks"
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -18,7 +24,7 @@ jobs:
       - run: uv run ruff check src tests scripts
       - run: uv run ruff format --check src tests scripts
       - run: uv run mypy src
-      - run: uv run pytest -m "not integration"
+      - run: uv run pytest -m "not integration and not live"
   evidence-and-docker:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -28,9 +34,20 @@ jobs:
         with:
           version: "0.12.23"
       - run: uv sync --frozen --python 3.11
-      - run: uv run mining-brief prepare
-      - run: uv run pytest
+      - run: uv run pytest -m "not live"
       - run: docker compose build agent
       - run: |
           mkdir -p outputs
           MINING_CONTAINER_UID="$(id -u)" MINING_CONTAINER_GID="$(id -g)" docker compose run --rm agent --strict
+  original-evidence:
+    if: github.event_name == 'workflow_dispatch' && inputs.fetch_originals
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.23"
+      - run: uv sync --frozen --python 3.11
+      - run: uv run mining-brief prepare
+      - run: uv run pytest -m live

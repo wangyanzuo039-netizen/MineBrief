@@ -12,11 +12,11 @@ cd MineBrief
 docker compose run --build --rm agent --strict
 ```
 
-首次源码构建需要联网下载基础镜像、依赖和公开原文；成功后打开 `outputs/<run_id>/brief.md`。不需要模型密钥或付费数据账号。
+首次源码构建只需联网下载基础镜像与依赖；演示证据缓存随源码提供，不依赖第三方网站。成功后打开 `outputs/<run_id>/brief.md`。不需要模型密钥或付费数据账号。
 
 ## 离线演示
 
-离线交付包 `mining-brief-offline.zip` **单独提供，不包含在 GitHub 源码仓库中**。收到后解压，启动 Docker Desktop，再双击 `start-offline.cmd`。脚本校验并导入随包运行环境，然后生成日报；不依赖现场下载 Python 包或原始资料。
+从 [GitHub Release](https://github.com/wangyanzuo039-netizen/MineBrief/releases/tag/v0.1.0-demo) 下载 `mining-brief-offline.zip` 和 SHA-256 文件。解压后启动 Docker Desktop，再双击 `start-offline.cmd`。脚本校验并导入随包运行环境，然后生成日报；不依赖现场下载 Python 包或原始资料。镜像只带核验提取缓存，不打包完整第三方 PDF / XLSX。
 
 手动运行（在已解压的离线包目录中）：
 
@@ -36,13 +36,13 @@ docker compose -f compose.offline.yaml run --rm agent
 
 | 服务 | 工具 | 数据实现 |
 | --- | --- | --- |
-| mining-news-mcp | `search(query, days)`、`fetch_article(url)` | ASX 发行人公告回放；live 模式 Google News RSS |
+| mining-news-mcp | `search(query, days)`、`fetch_article(url)` | ASX 发行人公告回放；live 模式近期登记公告 / Google News RSS |
 | mineral-pdf-mcp | `extract_resources(pdf_url)` | PyMuPDF 原文/表格解析；NI 43-101 和 JORC 专用 adapter |
 | lme-price-mcp | `get_price(commodity, date)`、`get_trend(commodity, days)` | LME 原始历史工作簿；Decimal 计算固定合约趋势 |
 
 ## 数据边界
 
-默认是 **2021-09-08 历史回放**，并非当前日期实时行情。数据从发行人、交易所公开原文下载并校验 SHA-256，没有伪造新闻、资源数字或价格序列。模板模式抽取新闻原文要点；配置模型后生成中文摘要，失败时明确降级。
+默认是 **2021-09-08 历史回放**，并非当前日期实时行情。核验提取缓存由发行人、交易所原文解析生成，关联原文与缓存 SHA-256，没有伪造新闻、资源数字或价格序列。`prepare` 可另行下载原文复验；默认演示读取提取缓存并明确标注，不宣称每次现场解析 PDF。模板模式抽取新闻原文要点；配置模型后生成中文摘要，失败时明确降级。
 
 Pilgangoora 按 JORC 2012 披露；题目要求的 NI 43-101 功能用 Zeus 技术报告单独验证。两者不混入同一矿山日报。Indicated / Inferred 为资源量类别，保留题目工具名 `extract_resources`；资源量与 Ore Reserve 储量分别报告。
 

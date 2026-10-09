@@ -12,15 +12,7 @@ pytestmark = pytest.mark.integration
 
 @pytest.fixture
 def settings():
-    configured = Settings()
-    required = [
-        entry
-        for entry in configured.manifest()["sources"]
-        if entry["id"] in {"pilgangoora-2021", "results-2021", "zeus-ni43101", "lme-lh"}
-    ]
-    if not all((configured.data_dir / entry["path"]).exists() for entry in required):
-        pytest.skip("originals missing; run mining-brief prepare")
-    return configured
+    return Settings()
 
 
 async def test_three_stdio_servers_and_every_required_tool(settings, tmp_path):
@@ -33,7 +25,8 @@ async def test_three_stdio_servers_and_every_required_tool(settings, tmp_path):
         fetched = await pool.call(
             "news", "fetch_article", {"url": news["data"]["articles"][0]["url"]}
         )
-        assert fetched["data"]["content_type"] == "issuer_announcement_pdf"
+        assert fetched["data"]["content_type"] == "verified_original_excerpt"
+        assert fetched["meta"]["evidence_origin"] == "verified_extraction_cache"
         pdf = await pool.call("pdf", "extract_resources", {"pdf_url": ni["url"]})
         assert pdf["data"]["reporting_standard"] == "NI 43-101"
         price = await pool.call(

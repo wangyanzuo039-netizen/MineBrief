@@ -15,6 +15,7 @@ from pydantic import HttpUrl
 from mining_brief.config import Settings
 from mining_brief.data import load_original
 from mining_brief.network import SourceError, download
+from mining_brief.replay import extracted
 from mining_brief.schemas import ResourceRow, Source, result
 
 NUMBER = r"([\d,]+(?:\.\d+)?)"
@@ -252,6 +253,8 @@ class PDFProvider:
                     "此报告版本未核验；需要登记文件哈希并验证日期与表格 adapter 后再抽取。",
                 )
         else:
+            if self.settings.mode == "demo":
+                return extracted(self.settings, "pdf", entry)
             content = await load_original(self.settings, entry)
         # Third-party table extraction may print a layout hint. stdout is MCP wire data.
         with redirect_stdout(sys.stderr):

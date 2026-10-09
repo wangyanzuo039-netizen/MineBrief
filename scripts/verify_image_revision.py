@@ -20,6 +20,7 @@ CHECKED_FILES = sorted(path.relative_to(ROOT).as_posix() for path in ROOT.glob("
     "uv.lock",
     "README.md",
     "data/manifest.json",
+    "data/replay.json",
 ]
 
 

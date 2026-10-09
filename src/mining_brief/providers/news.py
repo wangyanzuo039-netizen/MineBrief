@@ -15,6 +15,7 @@ from pydantic import HttpUrl
 from mining_brief.config import Settings
 from mining_brief.data import load_original
 from mining_brief.network import SourceError, download
+from mining_brief.replay import extracted
 from mining_brief.schemas import Source, result
 
 
@@ -57,6 +58,35 @@ class NewsProvider:
                         }
                     )
         else:
+            # Reviewed issuer disclosures remain usable when the secondary RSS service is unavailable.
+            for entry in self.settings.manifest()["sources"]:
+                if entry["id"] not in self.settings.manifest().get("live_news_ids", []):
+                    continue
+                if start <= date.fromisoformat(entry["published_at"]) <= end:
+                    items.append(
+                        {
+                            "id": entry["id"],
+                            "title": entry["title"],
+                            "url": entry["url"],
+                            "published_at": entry["published_at"],
+                            "publisher": entry["publisher"],
+                            "summary": "已核验的发行人公告；调用 fetch_article 下载并校验原文。",
+                            "content_type": "issuer_announcement_pdf",
+                        }
+                    )
+            if items:
+                return result(
+                    {
+                        "articles": sorted(
+                            items, key=lambda item: item["published_at"], reverse=True
+                        ),
+                        "window_start": start.isoformat(),
+                        "window_end": end.isoformat(),
+                    },
+                    sources=[self.source(item) for item in items],
+                    warnings=["当前新闻范围为登记的发行人公告，不代表全网新闻覆盖。"],
+                    mode=self.settings.mode,
+                )
             params = urlencode(
                 {
                     "q": f"{query} after:{start.isoformat()} before:{(end + timedelta(days=1)).isoformat()}",
@@ -136,6 +166,8 @@ class NewsProvider:
             None,
         )
         if entry:
+            if self.settings.mode == "demo":
+                return extracted(self.settings, "news", entry)
             content = await load_original(self.settings, entry)
             with pymupdf.open(stream=content, filetype="pdf") as doc:  # type: ignore[no-untyped-call]
                 text = "\n".join(doc[i].get_text() for i in range(min(3, len(doc))))

@@ -67,6 +67,7 @@ class MCPPool:
                     "MINING_PRICE_FILE",
                     "MINING_PRICE_CONTRACT",
                     "MINING_PRICE_SOURCE_URL",
+                    "MINING_PRICE_URL",
                 ):
                     if key in os.environ:
                         env[key] = os.environ[key]

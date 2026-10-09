@@ -15,6 +15,7 @@ from mining_brief.agent import run_agent
 from mining_brief.config import ROOT, Settings
 from mining_brief.data import prepare
 from mining_brief.mcp_client import SERVERS, MCPPool
+from mining_brief.replay import load_replay
 
 
 def parser() -> argparse.ArgumentParser:
@@ -88,7 +89,7 @@ async def execute(args: argparse.Namespace) -> tuple[int, dict[str, Any]]:
     if args.command == "prepare":
         return 0, {"sources": await prepare(settings, include_live=True)}
     if settings.mode == "demo" and not args.no_prepare:
-        await prepare(settings)
+        load_replay(settings)
     if args.command in {"check", "extract-ni"}:
         manifest = settings.manifest()
         ni = next(entry for entry in manifest["sources"] if entry["id"] == manifest["ni_report_id"])

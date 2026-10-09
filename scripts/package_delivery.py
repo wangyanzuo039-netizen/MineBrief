@@ -27,6 +27,7 @@ FILES = [
     ".dockerignore",
     ".gitattributes",
     "data/manifest.json",
+    "data/replay.json",
     ".github/workflows/ci.yml",
     ".cursor/mcp.json",
 ]

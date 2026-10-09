@@ -59,3 +59,16 @@ async def test_failed_fulltext_without_cached_evidence_stays_an_error(monkeypatc
     )
     with pytest.raises(httpx.ReadTimeout):
         await provider.fetch_article("https://news.google.com/rss/articles/unknown")
+
+
+async def test_recent_issuer_disclosures_do_not_depend_on_rss(monkeypatch):
+    provider = NewsProvider(Settings(mode="live", as_of="2026-10-09"))
+    network = AsyncMock(side_effect=AssertionError("unexpected secondary feed"))
+    monkeypatch.setattr("mining_brief.providers.news.download", network)
+    found = await provider.search("Pilbara", 30)
+    assert found["status"] == "ok"
+    assert {item["published_at"] for item in found["data"]["articles"]} == {
+        "2026-09-23",
+        "2026-10-07",
+    }
+    network.assert_not_awaited()
