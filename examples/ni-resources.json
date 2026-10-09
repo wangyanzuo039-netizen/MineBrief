@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "status": "ok",
+  "data": {
+    "project": "Zeus Lithium Project",
+    "reporting_standard": "NI 43-101",
+    "effective_date": "2024-05-15",
+    "document_hash": "55cbae69d5c5570bb901f3a67b790fb6a7f16419f0aa6d026fdbcfd24895f470",
+    "page_count": 99,
+    "resources": [
+      {
+        "category": "Indicated",
+        "category_raw": "Indicated",
+        "ore_tonnage_value": "586",
+        "ore_tonnage_unit": "Mt",
+        "grade_value": "957",
+        "grade_unit": "ppm Li",
+        "commodity": "Li",
+        "contained_metal_value": "561",
+        "contained_metal_unit": "kt Li",
+        "basis": "Total; dry tonnage; Table 1-1",
+        "cutoff": "525 ppm Li",
+        "page_number": 11,
+        "evidence_text": " | Indicated | 586 | 957 | 561 | 2,987",
+        "verification_status": "parsed_from_original"
+      },
+      {
+        "category": "Inferred",
+        "category_raw": "Inferred",
+        "ore_tonnage_value": "300",
+        "ore_tonnage_unit": "Mt",
+        "grade_value": "861",
+        "grade_unit": "ppm Li",
+        "commodity": "Li",
+        "contained_metal_value": "258",
+        "contained_metal_unit": "kt Li",
+        "basis": "Total; dry tonnage; Table 1-1",
+        "cutoff": "525 ppm Li",
+        "page_number": 11,
+        "evidence_text": " | Inferred | 300 | 861 | 258 | 1,375",
+        "verification_status": "parsed_from_original"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "zeus-ni43101",
+      "url": "https://noramlithiumcorp.com/site/assets/files/4051/may-15-2024-updated-mineral-resource-estimate-zeus-lithium-project.pdf",
+      "title": "Zeus Lithium NI 43-101 Technical Report",
+      "publisher": "Noram Lithium / SRK",
+      "observation_date": "2024-05-15",
+      "page_number": 11
+    }
+  ],
+  "warnings": [
+    "报告摘要表与结论段存在数值差异；此处按 Table 1-1 原表抽取，不混合两套数字。LCE 与含锂量分别披露，本结果使用含锂量。"
+  ],
+  "error": null,
+  "meta": {
+    "mode": "demo",
+    "fetched_at": "2026-10-08T12:46:54.324046+00:00"
+  }
+}

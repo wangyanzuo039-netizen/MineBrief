@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "transport": "stdio",
+  "verification": "SDK with exact configuration commands",
+  "checks": [
+    {
+      "server": "mining-news-mcp",
+      "tool": "search",
+      "status": "ok",
+      "source_ids": [
+        "pilgangoora-2021",
+        "results-2021"
+      ]
+    },
+    {
+      "server": "mining-news-mcp",
+      "tool": "fetch_article",
+      "status": "ok",
+      "source_ids": [
+        "pilgangoora-2021"
+      ]
+    },
+    {
+      "server": "mineral-pdf-mcp",
+      "tool": "extract_resources",
+      "status": "ok",
+      "source_ids": [
+        "zeus-ni43101"
+      ]
+    },
+    {
+      "server": "lme-price-mcp",
+      "tool": "get_price",
+      "status": "ok",
+      "source_ids": [
+        "lme-lh"
+      ]
+    },
+    {
+      "server": "lme-price-mcp",
+      "tool": "get_trend",
+      "status": "ok",
+      "source_ids": [
+        "lme-lh"
+      ]
+    }
+  ]
+}

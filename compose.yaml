@@ -1,0 +1,16 @@
+services:
+  agent:
+    image: mining-brief:demo
+    build: .
+    init: true
+    user: "${MINING_CONTAINER_UID:-10001}:${MINING_CONTAINER_GID:-10001}"
+    volumes:
+      - ./outputs:/app/outputs
+    environment:
+      MINING_MODE: demo
+      MINING_AS_OF: "2021-09-08"
+      MINING_LLM_KEY_ENV: MINING_LLM_API_KEY
+      MINING_LLM_API_KEY: ${MINING_LLM_API_KEY:-}
+      MINING_LLM_BASE_URL: ${MINING_LLM_BASE_URL:-https://api.deepseek.com}
+      MINING_LLM_MODEL: ${MINING_LLM_MODEL:-deepseek-flash}
+    command: ["--mode", "demo", "--query", "给我生成一份关于 Pilbara 锂矿的今日简报"]

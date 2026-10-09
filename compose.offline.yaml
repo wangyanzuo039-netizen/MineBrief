@@ -1,0 +1,13 @@
+services:
+  agent:
+    image: mining-brief:demo
+    pull_policy: never
+    network_mode: none
+    init: true
+    user: "${MINING_CONTAINER_UID:-10001}:${MINING_CONTAINER_GID:-10001}"
+    volumes:
+      - ./outputs:/app/outputs
+    environment:
+      MINING_MODE: demo
+      MINING_AS_OF: "2021-09-08"
+    command: ["--mode", "demo", "--generation", "template", "--strict"]

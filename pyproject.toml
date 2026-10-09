@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mining-brief"
+version = "0.1.0"
+description = "Traceable mining daily briefing through three MCP servers"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "mcp[cli]>=1.20,<2",
+  "pydantic>=2.11,<3",
+  "httpx>=0.28,<0.29",
+  "beautifulsoup4>=4.13,<5",
+  "pymupdf>=1.26,<2",
+  "openpyxl>=3.1,<4",
+  "feedparser>=6.0,<7",
+  "python-dotenv>=1.1,<2",
+  "tzdata>=2025.2",
+]
+
+[project.scripts]
+mining-brief = "mining_brief.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.4,<9", "pytest-asyncio>=1.2,<2", "ruff>=0.13,<1", "mypy>=1.18,<2", "types-beautifulsoup4", "types-openpyxl"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mining_brief"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["integration: real stdio MCP processes", "live: network-dependent checks"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src/mining_brief"]
+[[tool.mypy.overrides]]
+module = ["pymupdf.*", "feedparser.*"]
+ignore_missing_imports = true

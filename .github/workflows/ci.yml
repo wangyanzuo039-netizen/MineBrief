@@ -1,0 +1,36 @@
+name: quality
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.23"
+          enable-cache: true
+      - run: uv sync --frozen --python 3.11
+      - run: uv run ruff check src tests scripts
+      - run: uv run ruff format --check src tests scripts
+      - run: uv run mypy src
+      - run: uv run pytest -m "not integration"
+  evidence-and-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.23"
+      - run: uv sync --frozen --python 3.11
+      - run: uv run mining-brief prepare
+      - run: uv run pytest
+      - run: docker compose build agent
+      - run: |
+          mkdir -p outputs
+          MINING_CONTAINER_UID="$(id -u)" MINING_CONTAINER_GID="$(id -g)" docker compose run --rm agent --strict

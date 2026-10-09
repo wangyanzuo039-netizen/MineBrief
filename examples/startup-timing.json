@@ -1,0 +1,22 @@
+{
+    "tested_at":  "2026-10-09T12:08:35.6992479Z",
+    "test_kind":  "fresh isolated Docker daemon with empty image and layer storage",
+    "network":  "none",
+    "helper_image":  "docker.m.daocloud.io/library/docker:29-dind@sha256:1e08cdb63405ca788aea94ef35b792d1e299607c667d33d7bcbcae1fd2611ced",
+    "prerequisites":  "Docker installed/running; delivery ZIP and test helper already on this machine",
+    "unzip_seconds":  1.91,
+    "engine_setup_seconds":  17.64,
+    "verification_seconds":  2.36,
+    "image_import_seconds":  35.57,
+    "report_seconds":  8.49,
+    "total_seconds":  66.58,
+    "exit_code":  0,
+    "images_before":  0,
+    "image_id":  "sha256:c9b70dc7b1bf1f88e4d5cf6e11cc5c6c7b412af275b6951c1809152e1cbe8aa9",
+    "expected_export_image_id":  "sha256:a9f076c50b3eff116996f6cb95fdeffd7fd06a4b4d1a4eb32fa19387bb431403",
+    "run_id":  "20261009T120937Z-8acfde8b",
+    "status":  "complete",
+    "generation_mode":  "template",
+    "within_five_minutes":  true,
+    "cleanup_exit_code":  0
+}

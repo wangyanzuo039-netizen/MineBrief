@@ -1,0 +1,78 @@
+{
+  "demo_report_id": "pilgangoora-2021",
+  "price": {
+    "id": "lme-lh",
+    "published_at": "2021-09-08",
+    "contract_month": "2021-09",
+    "kind": "xlsx",
+    "path": "raw/lme_lithium.xlsx",
+    "publisher": "London Metal Exchange",
+    "sha256": "b5452046a5b01dee3cb8fddbb1fc2c1c43e3896e6ec49783d8dfe21b4ec30f0f",
+    "url": "https://www.lme.com/-/media/files/data/reports-and-data/historical-data-for-cash-settled-futures/lh--closing-prices-19072021-to-08092021.xlsx",
+    "title": "LME LH daily closing prices"
+  },
+  "live_report_id": "pilgangoora-2025",
+  "demo_news_ids": [
+    "pilgangoora-2021",
+    "results-2021"
+  ],
+  "schema_version": "1.0",
+  "ni_report_id": "zeus-ni43101",
+  "sources": [
+    {
+      "id": "pilgangoora-2021",
+      "published_at": "2021-09-06",
+      "kind": "pdf",
+      "path": "raw/pilgangoora_20210906.pdf",
+      "publisher": "Pilbara Minerals / ASX",
+      "sha256": "9b2bcd8ccafa1eae3f6343629fee7c6b8c94951651a5a27915e8fe2e45ee545c",
+      "url": "https://announcements.asx.com.au/asxpdf/20210906/pdf/4506cwh63z75jr.pdf",
+      "title": "Pilgangoora JORC 2012 Mineral Resource Update",
+      "effective_date": "2021-06-30"
+    },
+    {
+      "id": "results-2021",
+      "published_at": "2021-08-26",
+      "kind": "pdf",
+      "path": "raw/news_20210826.pdf",
+      "publisher": "Pilbara Minerals / ASX",
+      "sha256": "d2f7483189abfd2323b93ac1747e36a5cad62f5feafbf6ad53a68fd30b0b5bf4",
+      "url": "https://www.asx.com.au/asxpdf/20210826/pdf/44zsgxgk0wzqkh.pdf",
+      "title": "June 2021 Full-Year Financial Results"
+    },
+    {
+      "id": "zeus-ni43101",
+      "published_at": "2024-07-10",
+      "kind": "pdf",
+      "path": "raw/zeus_2024.pdf",
+      "publisher": "Noram Lithium / SRK",
+      "sha256": "55cbae69d5c5570bb901f3a67b790fb6a7f16419f0aa6d026fdbcfd24895f470",
+      "url": "https://noramlithiumcorp.com/site/assets/files/4051/may-15-2024-updated-mineral-resource-estimate-zeus-lithium-project.pdf",
+      "title": "Zeus Lithium NI 43-101 Technical Report",
+      "effective_date": "2024-05-15"
+    },
+    {
+      "id": "pilgangoora-2025",
+      "published_at": "2025-06-11",
+      "kind": "pdf",
+      "path": "raw/pilbara_2025.pdf",
+      "publisher": "PLS / ASX",
+      "sha256": "86e630e479590662e522617f975671ac2f84bfb890d93d61abae4832d8e91e89",
+      "url": "https://announcements.asx.com.au/asxpdf/20250611/pdf/06kmc3l7r1bjsm.pdf",
+      "title": "Pilgangoora Mineral Resource Update 2025",
+      "effective_date": "2025-03-31"
+    },
+    {
+      "id": "lme-lh",
+      "published_at": "2021-09-08",
+      "contract_month": "2021-09",
+      "kind": "xlsx",
+      "path": "raw/lme_lithium.xlsx",
+      "publisher": "London Metal Exchange",
+      "sha256": "b5452046a5b01dee3cb8fddbb1fc2c1c43e3896e6ec49783d8dfe21b4ec30f0f",
+      "url": "https://www.lme.com/-/media/files/data/reports-and-data/historical-data-for-cash-settled-futures/lh--closing-prices-19072021-to-08092021.xlsx",
+      "title": "LME LH daily closing prices"
+    }
+  ],
+  "demo_as_of": "2021-09-08"
+}
