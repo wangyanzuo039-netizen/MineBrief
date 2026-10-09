@@ -29,6 +29,8 @@ FILES = [
     "data/manifest.json",
     "data/replay.json",
     ".github/workflows/ci.yml",
+    ".github/workflows/release.yml",
+    ".github/RELEASE_BODY.md",
     ".cursor/mcp.json",
 ]
 DIRECTORIES = ["src", "tests", "docs", "examples", "scripts"]
