@@ -18,6 +18,14 @@ def copied(tmp_path):
     return Settings(data_dir=tmp_path)
 
 
+def test_replay_checksum_survives_git_line_ending_normalization():
+    settings = Settings()
+    content = (ROOT / "data" / "replay.json").read_bytes()
+    canonical = content.replace(b"\r\n", b"\n")
+    assert content == canonical, "Hashed replay artifact must use LF on every platform"
+    assert hashlib.sha256(canonical).hexdigest() == settings.manifest()["replay"]["sha256"]
+
+
 def test_corrupted_cache_is_rejected(tmp_path):
     settings = copied(tmp_path)
     with (tmp_path / "replay.json").open("ab") as stream:

@@ -97,7 +97,7 @@
   "demo_as_of": "2021-09-08",
   "replay": {
     "path": "replay.json",
-    "sha256": "0538abaf2048ff2fd105ebbcf5e6aa4fb4c5dd5c7c1d76bfdd43ed8def7060ee"
+    "sha256": "068e5746a78a0b64d04beba0ec849555efd418ee81b2f02d6c8d3091d77e09a7"
   },
   "live_news_ids": [
     "quarterly-advisory-2026",
